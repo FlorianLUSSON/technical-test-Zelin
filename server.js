@@ -1,16 +1,19 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
+const mongoSanitize = require("express-mongo-sanitize");
 const port = 3000;
-
 const cors = require("cors");
+
+app.use(mongoSanitize());
+
 app.use(
   cors({
     origin: "*",
   })
 );
 
-app.use(express.json()); // Pour pouvoir parser le JSON dans les requêtes
+app.use(express.json());
 
 const routeBook = require("./routes/Book");
 
