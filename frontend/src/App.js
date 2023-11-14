@@ -4,7 +4,7 @@ import BookList from "./components/BookList";
 
 function App() {
   return (
-    <div className="App bg-gray-100 min-h-screen flex flex-col items-center justify-center">
+    <div className="App bg-gray-100 min-h-screen flex-col items-center ">
       <Header />
       <BookList />
     </div>
