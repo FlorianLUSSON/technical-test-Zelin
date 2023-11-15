@@ -22,11 +22,31 @@ const api = {
     }
   },
 
-  postBook: async () => {
+  deleteBook: async (bookId) => {
+    try {
+      const response = await fetch(`${BASE_URL}/books/${bookId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(
+          `Erreur lors de la suppresion du livre : ${errorMessage}`
+        );
+      }
+    } catch (error) {
+      console.error("Erreur dans deleteBook :", error);
+      throw error;
+    }
+  },
+
+  postBook: async (bookData) => {
     try {
       const response = await fetch(`${BASE_URL}/books`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bookData), // Envoyer les données du livre
       });
 
       if (!response.ok) {

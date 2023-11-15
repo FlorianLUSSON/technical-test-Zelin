@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import api from "../services/api";
 
-const EditModal = ({ isOpen, onClose, book, onSave }) => {
-  const [editedBook, setEditedBook] = useState({
+const AddBookModal = ({ isOpen, onClose, onAdd }) => {
+  const [newBook, setNewBook] = useState({
     Name: "",
     Author: "",
     Evaluation: 1,
@@ -12,39 +12,36 @@ const EditModal = ({ isOpen, onClose, book, onSave }) => {
     Opinion: "",
   });
 
-  useEffect(() => {
-    setEditedBook({
-      Name: book.Name,
-      Author: book.Author,
-      Evaluation: book.Evaluation,
-      Have: book.Have,
-      Summary: book.Summary,
-      Image: book.Image,
-      Opinion: book.Opinion,
-    });
-  }, [book]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEditedBook((prevBook) => ({
+    setNewBook((prevBook) => ({
       ...prevBook,
       [name]: value,
     }));
   };
 
-  const handleSave = async () => {
+  const handleAdd = async () => {
     try {
       const currentDate = new Date().toLocaleString(); // Récupérer la date actuelle
-      const updatedBook = {
-        ...editedBook,
-        Last_update: currentDate, // Ajouter la date dans le champ last_update
+      const bookToAdd = {
+        ...newBook,
+        Last_update: currentDate,
       };
 
-      await api.updateBook(book._id, updatedBook);
-      onSave(editedBook);
+      await api.postBook(bookToAdd);
       onClose();
+
+      setNewBook({
+        Name: "",
+        Author: "",
+        Evaluation: 1,
+        Have: false,
+        Summary: "",
+        Image: "",
+        Opinion: "",
+      });
     } catch (error) {
-      console.error("Erreur lors de la sauvegarde du livre :", error);
+      console.error("Erreur lors de l'ajout du livre :", error);
       throw error;
     }
   };
@@ -58,7 +55,7 @@ const EditModal = ({ isOpen, onClose, book, onSave }) => {
         onClick={onClose}
       ></div>
       <div className={`modal ${isOpen ? "block" : "hidden"}`}>
-        <div className="modal-container fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-96 p-4 rounded-md z-999">
+        <div className="modal-container fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-96 p-4 rounded-md modal">
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Nom
@@ -66,7 +63,6 @@ const EditModal = ({ isOpen, onClose, book, onSave }) => {
             <input
               type="text"
               name="Name"
-              value={editedBook.Name}
               onChange={handleChange}
               className="w-full border rounded-md p-2"
             />
@@ -79,7 +75,6 @@ const EditModal = ({ isOpen, onClose, book, onSave }) => {
             <input
               type="text"
               name="Author"
-              value={editedBook.Author}
               onChange={handleChange}
               className="w-full border rounded-md p-2"
             />
@@ -91,7 +86,6 @@ const EditModal = ({ isOpen, onClose, book, onSave }) => {
             </label>
             <select
               name="Evaluation"
-              value={editedBook.Evaluation}
               onChange={handleChange}
               className="w-full border rounded-md p-2"
             >
@@ -110,9 +104,8 @@ const EditModal = ({ isOpen, onClose, book, onSave }) => {
             <input
               type="checkbox"
               name="Have"
-              checked={editedBook.Have}
               onChange={() =>
-                setEditedBook((prevBook) => ({
+                setNewBook((prevBook) => ({
                   ...prevBook,
                   Have: !prevBook.Have,
                 }))
@@ -126,7 +119,6 @@ const EditModal = ({ isOpen, onClose, book, onSave }) => {
             </label>
             <textarea
               name="Summary"
-              value={editedBook.Summary}
               onChange={handleChange}
               className="w-full border rounded-md p-2"
             />
@@ -138,17 +130,15 @@ const EditModal = ({ isOpen, onClose, book, onSave }) => {
             </label>
             <textarea
               name="Opinion"
-              value={editedBook.Opinion}
               onChange={handleChange}
               className="w-full border rounded-md p-2"
             />
           </div>
-
           <button
-            onClick={handleSave}
+            onClick={handleAdd}
             className="bg-blue-500 text-white px-4 py-2 rounded-md"
           >
-            Sauvegarder
+            Ajouter
           </button>
           <button onClick={onClose} className="text-gray-500 px-4 py-2">
             Annuler
@@ -159,4 +149,4 @@ const EditModal = ({ isOpen, onClose, book, onSave }) => {
   );
 };
 
-export default EditModal;
+export default AddBookModal;
