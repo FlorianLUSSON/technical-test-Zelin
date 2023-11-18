@@ -22,7 +22,7 @@ const AddBookModal = ({ isOpen, onClose, onAdd }) => {
 
   const handleAdd = async () => {
     try {
-      const currentDate = new Date().toLocaleString(); // Récupérer la date actuelle
+      const currentDate = new Date().toLocaleString();
       const bookToAdd = {
         ...newBook,
         Last_update: currentDate,

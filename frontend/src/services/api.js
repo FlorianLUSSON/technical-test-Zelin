@@ -46,7 +46,7 @@ const api = {
       const response = await fetch(`${BASE_URL}/books`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bookData), // Envoyer les données du livre
+        body: JSON.stringify(bookData),
       });
 
       if (!response.ok) {
